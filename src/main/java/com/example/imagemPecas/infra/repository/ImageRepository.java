@@ -2,6 +2,7 @@ package com.example.imagemPecas.infra.repository;
 
 import com.example.imagemPecas.domain.entity.Image;
 import com.example.imagemPecas.domain.enums.ImageExtension;
+import com.example.imagemPecas.infra.repository.specs.GenericSpecs;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -11,15 +12,14 @@ import java.util.List;
 
 import static com.example.imagemPecas.infra.repository.specs.ImageSpecs.*;
 import static org.springframework.data.jpa.domain.Specification.anyOf;
+import static org.springframework.data.jpa.domain.Specification.where;
 
 public interface ImageRepository extends JpaRepository<Image, String>,
         JpaSpecificationExecutor<Image> {
 
-    default List<Image> findByExtensionAndNameOrTagsLike(ImageExtension extension,
-                                                         String query) {
+    default List<Image> findByExtensionAndNameOrTagsLike(ImageExtension extension, String query) {
         //SELECT * FROM IMAGE WHERE 1 = 1
-        Specification<Image> conjuction = (root, q, criteriaBuilder) -> criteriaBuilder.conjunction();
-        Specification<Image> spec = Specification.where(conjuction);
+        Specification<Image> spec = where(GenericSpecs.conjuction());
 
 
         if(extension != null){
